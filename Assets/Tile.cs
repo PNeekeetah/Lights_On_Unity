@@ -8,14 +8,18 @@ public class Tile : MonoBehaviour
   private SpriteRenderer _sR;
   private Transform _t;
   private bool _isLit;
-  private Vector2 _index;
+  private Vector2Int _index;
   private Coroutine _glowEffect;
   private bool _coroutineMutex;
   private WaitForSeconds _cachedWait;
   private bool _waitMutex;
+  private bool _hoveredOver;
 
-
-  public Vector2 Index
+  public GameObject GO
+  {
+    get { return _gO; }
+  }
+  public Vector2Int Index
 
   {
     get { return _index; }
@@ -44,7 +48,12 @@ public class Tile : MonoBehaviour
     _sR.color = color;
   }
 
-  public void Initialize(Vector2 position, Vector2 size, Vector2 index)
+  public void HoveredOver(bool hovered) 
+  {
+    _hoveredOver = hovered;
+  }
+
+  public void Initialize(Vector2 position, Vector2 size, Vector2Int index)
   {
     _gO = Instantiate(LevelGenerator.tile, position, Quaternion.identity);
     _gO.name = "Tile " + index.x + index.y;
@@ -59,7 +68,7 @@ public class Tile : MonoBehaviour
     _coroutineMutex = true;
     _waitMutex = true;
     _cachedWait = new WaitForSeconds(0.1f);
-
+    _hoveredOver = false;
   }
 
   IEnumerator Glow()
@@ -111,11 +120,11 @@ public class Tile : MonoBehaviour
 
   void Highlight()
   {
-    if ((LevelGenerator.selectedObject == _gO) && (_coroutineMutex))
+    if ((_hoveredOver) && (_coroutineMutex))
     {
       _glowEffect = StartCoroutine(Glow());
     }
-    else if (LevelGenerator.selectedObject != _gO)
+    else if (!_hoveredOver)
     {
       if (_glowEffect != null)
       {
@@ -138,7 +147,7 @@ public class Tile : MonoBehaviour
 
   void ToggleTileLight() 
   {
-    if ((LevelGenerator.selectedObject == _gO) && ( Input.GetMouseButton((int) Constants.MOUSE_STATES.LEFT_CLICK)) && _waitMutex)
+    if ((_hoveredOver) && ( Input.GetMouseButton((int) Constants.MOUSE_STATES.LEFT_CLICK)) && _waitMutex)
     {
       StartCoroutine(ToggleLightWithBreak());
     }

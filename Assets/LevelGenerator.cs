@@ -18,7 +18,7 @@ public class LevelGenerator : MonoBehaviour
   private List<List<Tile>> indexTileList = new List<List<Tile>>();
   private GameObject board;
   private Vector2Int[] steps;
-  private bool _cross = true;
+  private bool _cross = false;
   private bool _playMode = false;
   private WaitForSeconds _cachedWait;
   
@@ -198,6 +198,10 @@ public class LevelGenerator : MonoBehaviour
     if (Input.GetKeyDown(KeyCode.X)) 
     {
       _cross = !_cross;
+    }
+    if (Input.GetKeyDown(KeyCode.Escape)) 
+    {
+      Application.Quit();
     }
 
 
